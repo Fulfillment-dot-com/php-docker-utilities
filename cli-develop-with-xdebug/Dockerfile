@@ -1,7 +1,8 @@
 ARG PHP_VERSION="7.4.33"
-ARG USER_ID=1000
 
 FROM php:${PHP_VERSION}-cli-alpine
+
+ARG USER_ID=1000
 
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 RUN chmod uga+x /usr/local/bin/install-php-extensions && \
@@ -24,7 +25,7 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 # - Clean bundled config/users & recreate them with UID 1000 for docker compatability in dev container.
 # - Create composer directories (since we run as non-root later)
-RUN deluser --remove-home www-data && adduser -u${USER_ID} -D www-data && rm -rf /var/www /usr/local/etc/php-fpm.d/* && \
+RUN deluser --remove-home www-data && adduser -u$USER_ID -D www-data && rm -rf /var/www /usr/local/etc/php-fpm.d/* && \
     mkdir -p /var/www/.composer /app && chown -R www-data:www-data /app /var/www/.composer
 
 #RUN pecl install xdebug-3.2.1 \
